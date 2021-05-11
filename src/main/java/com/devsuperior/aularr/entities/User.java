@@ -1,19 +1,34 @@
 package com.devsuperior.aularr.entities;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 @Entity
-@Table
+@Table(name = "tb_user")
 public class User {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String name;
+	
+	@ManyToMany
+	@JoinTable(name = "tb_follows",
+		joinColumns = @JoinColumn(name = "user_id"),
+		inverseJoinColumns = @JoinColumn(name = "followed_id"))	
+	private Set<User> following = new HashSet<>();
+
+	@ManyToMany(mappedBy = "following")
+	private Set<User> followers = new HashSet<>();
 	
 	public User() {
 	}
@@ -37,5 +52,13 @@ public class User {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public Set<User> getFollowing() {
+		return following;
+	}
+
+	public Set<User> getFollowers() {
+		return followers;
 	}
 }

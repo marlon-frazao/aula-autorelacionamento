@@ -20,6 +20,18 @@ public class UserService {
 	@Transactional(readOnly = true)
 	public List<UserDTO> findAll() {
 		List<User> result = repository.findAll();
-		return result.stream().map(x -> new UserDTO(x)).collect(Collectors.toList());
+		return result.stream().map(x -> new UserDTO(x, x.getFollowing(), x.getFollowers())).collect(Collectors.toList());
+	}
+
+	@Transactional(readOnly = true)
+	public List<UserDTO> getFollowing(Long id) {
+		User result = repository.getOne(id);
+		return result.getFollowing().stream().map(x -> new UserDTO(x)).collect(Collectors.toList());
+	}
+
+	@Transactional(readOnly = true)
+	public List<UserDTO> getFollowers(Long id) {
+		User result = repository.getOne(id);
+		return result.getFollowers().stream().map(x -> new UserDTO(x)).collect(Collectors.toList());
 	}
 }
